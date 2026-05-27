@@ -40,6 +40,14 @@ const roleOptions = [
   { label: "ADMIN", value: "ADMIN" },
 ] as const;
 
+interface User {
+  id: string;
+  name: string;
+  email: string;
+  role: (typeof roleOptions)[number]["value"];
+  image: string;
+}
+
 const data = {
   user: {
     name: "shadcn",
@@ -48,33 +56,15 @@ const data = {
   },
   navMain: [
     {
-      title: "Dashboard",
-      url: "/dashboard",
-      icon: <RiDashboardLine />,
-      roleView: roleOptions.map((option) => option.value),
-    },
-    {
-      title: "Pedidos",
-      url: "/orders",
-      icon: <RiListUnordered />,
-      roleView: roleOptions.map((option) => option.value),
-    },
-    {
       title: "Productos",
       url: "/products",
       icon: <RiFolderLine />,
       roleView: roleOptions.map((option) => option.value),
     },
     {
-      title: "Clientes",
-      url: "/customers",
-      icon: <RiGroupLine />,
-      roleView: roleOptions.map((option) => option.value),
-    },
-    {
-      title: "Proveedores",
-      url: "/suppliers",
-      icon: <RiGroupLine />,
+      title: "Movimientos de inventario",
+      url: "/movements/products",
+      icon: <RiBarChartLine />,
       roleView: roleOptions.map((option) => option.value),
     },
     {
@@ -85,6 +75,30 @@ const data = {
         .map((option) => option.value)
         .filter((value) => value === "ADMIN"),
     },
+    // {
+    //   title: "Dashboard",
+    //   url: "/dashboard",
+    //   icon: <RiDashboardLine />,
+    //   roleView: roleOptions.map((option) => option.value),
+    // },
+    // {
+    //   title: "Pedidos",
+    //   url: "/orders",
+    //   icon: <RiListUnordered />,
+    //   roleView: roleOptions.map((option) => option.value),
+    // },
+    // {
+    //   title: "Clientes",
+    //   url: "/customers",
+    //   icon: <RiGroupLine />,
+    //   roleView: roleOptions.map((option) => option.value),
+    // },
+    // {
+    //   title: "Proveedores",
+    //   url: "/suppliers",
+    //   icon: <RiGroupLine />,
+    //   roleView: roleOptions.map((option) => option.value),
+    // },
   ],
   navClouds: [
     {
@@ -170,7 +184,27 @@ const data = {
   ],
 };
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const { user } = useUser();
+  const [user, setUser] = React.useState<User>();
+
+  async function getMe() {
+    try {
+      const response = await fetch("/api/me", {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+      }).then((res) => {
+        if (!res.ok) {
+          throw new Error("Failed to fetch user data.");
+        }
+        return res;
+      });
+      const userData = await response.json();
+      setUser(userData.user);
+    } catch (error) {}
+  }
+
+  React.useEffect(() => {
+    getMe();
+  }, []);
 
   return (
     <Sidebar collapsible="offcanvas" {...props}>
@@ -179,7 +213,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           <SidebarMenuItem>
             <SidebarMenuButton
               className="data-[slot=sidebar-menu-button]:p-1.5!"
-              render={<Link href="#" />}
+              render={<Link href="/welcome" />}
             >
               <Image
                 src="/logo-white.svg"
@@ -196,7 +230,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={data.navMain} userRole={user?.role} />
+        <NavMain items={data.navMain} userRole={user?.role || ""} />
         {/* <NavDocuments items={data.documents} />
         <NavSecondary items={data.navSecondary} className="mt-auto" /> */}
       </SidebarContent>

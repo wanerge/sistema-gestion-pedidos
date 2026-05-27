@@ -17,53 +17,32 @@ import {
 import { toast } from "sonner";
 import { Spinner } from "@/components/ui/spinner";
 
-const entityLabels = {
-  user: {
-    upper: "User",
-    lower: "user",
-    route: "user",
-  },
-  product: {
-    upper: "Product",
-    lower: "product",
-    route: "product",
-  },
-  movement: {
-    upper: "Movement",
-    lower: "movement",
-    route: "movements/product",
-  },
-} as const;
-
-export default function AlertDialogDestructive({
-  id,
-  name,
+export default function DeleteProductDialog({
+  productId,
+  productName,
   onClose,
-  type,
 }: Readonly<{
-  id: string;
-  name: string;
+  productId: string;
+  productName: string;
   onClose: () => void;
-  type: "product" | "user" | "movement";
 }>) {
   const [isDeleting, setIsDeleting] = React.useState(false);
-  const entityLabel = entityLabels[type];
 
   async function handleDelete() {
     setIsDeleting(true);
     try {
-      const response = await fetch(`/api/${entityLabel.route}?id=${id}`, {
+      const response = await fetch(`/api/product?id=${productId}`, {
         method: "DELETE",
       });
       if (!response.ok) {
-        throw new Error(`Failed to delete ${entityLabel.lower}`);
+        throw new Error("Failed to delete product");
       }
-      toast.success(`${entityLabel.upper} ${name} deleted successfully`);
+      toast.success(`Product ${productName} deleted successfully`);
       onClose();
     } catch (error) {
-      console.error(`Error deleting ${entityLabel.lower}:`, error);
+      console.error("Error deleting product:", error);
       toast.error(
-        `Error deleting ${entityLabel.lower} ${name}: Please try again later.`,
+        `Error deleting product ${productName}: Please try again later.`,
       );
     } finally {
       setIsDeleting(false);
@@ -76,9 +55,7 @@ export default function AlertDialogDestructive({
         <AlertDialogMedia className="bg-destructive/10 text-destructive dark:bg-destructive/20 dark:text-destructive">
           {isDeleting ? <Spinner /> : <RiDeleteBin6Line />}
         </AlertDialogMedia>
-        <AlertDialogTitle>
-          Delete {entityLabel.upper} {name}
-        </AlertDialogTitle>
+        <AlertDialogTitle>Delete product {productName}</AlertDialogTitle>
         <AlertDialogDescription>
           This will permanently delete. Are you sure you want to continue?
         </AlertDialogDescription>

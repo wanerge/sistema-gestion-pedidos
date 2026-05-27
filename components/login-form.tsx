@@ -68,7 +68,7 @@ export function LoginForm({
         toast.success("Login successful!");
 
         // Redirigir al dashboard después del login exitoso
-        router.push("/dashboard");
+        router.push("/welcome");
       } catch (error) {
         const errorMessage =
           error instanceof Error

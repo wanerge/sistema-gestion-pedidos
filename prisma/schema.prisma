@@ -39,6 +39,11 @@ enum Enum_PaymentStatus {
   REFUNDED
 }
 
+enum Enum_MovementType {
+  INPUT
+  OUTPUT
+}
+
 model User {
   id           String    @id @default(cuid())
   name         String
@@ -52,6 +57,13 @@ model User {
   updatedAt    DateTime  @updatedAt
   perfil       Perfil?
   role         Enum_Role @default(USER)
+
+  createdOrders            Order[]             @relation("OrderCreatedBy")
+  updatedOrders            Order[]             @relation("OrderUpdatedBy")
+  createdProducts          Product[]           @relation("ProductCreatedBy")
+  updatedProducts          Product[]           @relation("ProductUpdatedBy")
+  createdInventoryMovement InventoryMovement[] @relation("InventoryMovementCreatedBy")
+  updatedInventoryMovement InventoryMovement[] @relation("InventoryMovementUpdatedBy")
 }
 
 model Perfil {
@@ -103,6 +115,13 @@ model Product {
   updatedAt   DateTime    @updatedAt
   suppliers   Supplier[]  @relation("ProductSuppliers")
   orderItems  OrderItem[]
+
+  createdById String
+  updatedById String
+  createdBy   User   @relation("ProductCreatedBy", fields: [createdById], references: [id])
+  updatedBy   User   @relation("ProductUpdatedBy", fields: [updatedById], references: [id])
+
+  inventoryMovements InventoryMovement[]
 }
 
 model Order {
@@ -120,6 +139,11 @@ model Order {
   customer       Customer         @relation(fields: [customerId], references: [id])
   orderItems     OrderItem[]
   payment        Payment[]
+
+  createdById String
+  updatedById String
+  createdBy   User   @relation("OrderCreatedBy", fields: [createdById], references: [id])
+  updatedBy   User   @relation("OrderUpdatedBy", fields: [updatedById], references: [id])
 }
 
 model OrderItem {
@@ -144,4 +168,19 @@ model Payment {
   updatedAt   DateTime           @updatedAt
   orderId     String
   order       Order              @relation(fields: [orderId], references: [id])
+}
+
+model InventoryMovement {
+  id        String            @id @default(cuid())
+  type      Enum_MovementType
+  quantity  Int
+  createdAt DateTime          @default(now())
+  updatedAt DateTime          @updatedAt
+  productId String
+  product   Product           @relation(fields: [productId], references: [id])
+
+  createdById String
+  updatedById String
+  createdBy   User   @relation("InventoryMovementCreatedBy", fields: [createdById], references: [id])
+  updatedBy   User   @relation("InventoryMovementUpdatedBy", fields: [updatedById], references: [id])
 }

@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ColumnDef } from "@tanstack/react-table";
 import Link from "next/link";
 
@@ -21,28 +20,25 @@ import {
 import { RiMore2Line, RiPencilLine, RiDeleteBin6Line } from "@remixicon/react";
 import Delete from "@/components/delete-dialog/Index";
 
-// This type is used to define the shape of our data.
-// You can use a Zod schema here if you want.
-export type User = {
+export type InventoryMovement = {
   id: string;
-  name: string;
-  email: string;
-  image: string;
-  enabled: boolean;
-  createdAt: Date;
-  role: "ADMIN" | "USER";
+  type: "INPUT" | "OUTPUT";
+  quantity: number;
+  createdAt: string;
+  createdBy: { name: string };
+  product: { name: string };
 };
 
-function UserActionsCell({
-  userId,
-  userName,
-}: Readonly<{ userId: string; userName: string }>) {
+function MovementActionsCell({
+  movementId,
+  movementName,
+}: Readonly<{ movementId: string; movementName: string }>) {
   const [deleteOpen, setDeleteOpen] = useState(false);
   const router = useRouter();
 
   const handleDeleteSuccess = () => {
     setDeleteOpen(false);
-    router.push("/users");
+    router.push("/movements/products");
     globalThis.location.reload();
   };
 
@@ -55,7 +51,7 @@ function UserActionsCell({
         <DropdownMenuContent align="end" className="w-32">
           <DropdownMenuGroup>
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <Link href={`/users/edit/${userId}`}>
+            <Link href={`/movements/products/edit/${movementId}`}>
               <DropdownMenuItem>
                 <RiPencilLine />
                 Edit
@@ -74,65 +70,77 @@ function UserActionsCell({
         </DropdownMenuContent>
       </DropdownMenu>
       <Delete
-        id={userId}
-        name={userName}
+        id={movementId}
+        name={movementName}
         onClose={handleDeleteSuccess}
-        type="user"
+        type="movement"
       />
     </AlertDialog>
   );
 }
 
-export const columns: ColumnDef<User>[] = [
+export const columns: ColumnDef<InventoryMovement>[] = [
   {
-    accessorKey: "image",
-    header: "Avatar",
+    accessorKey: "id",
+    header: "ID",
+  },
+  {
+    accessorKey: "product",
+    header: "Product",
     cell: ({ row }) => {
-      const image = row.getValue("image");
-      const name = row.getValue("name");
-      return (
-        <div className="flex items-center">
-          <Avatar>
-            <AvatarImage src={image as string} alt={name as string} />
-            <AvatarFallback>
-              {(name as string)?.charAt(0) || "?"}
-            </AvatarFallback>
-          </Avatar>
-        </div>
-      );
+      const product = row.getValue("product") as { name: string };
+      return <span>{product.name}</span>;
     },
-  },
-  {
-    accessorKey: "name",
-    header: "Name",
-  },
-  {
-    accessorKey: "role",
-    header: "Role",
-  },
-  {
-    accessorKey: "email",
-    header: "Email",
   },
   {
     accessorKey: "createdAt",
     header: "Created At",
     cell: ({ row }) => {
-      const date = row.getValue("createdAt");
-      return <span>{new Date(date as string).toLocaleDateString()}</span>;
+      const createdAt = row.getValue("createdAt") as string;
+      return <span>{new Date(createdAt).toLocaleString()}</span>;
     },
   },
   {
-    accessorKey: "enabled",
-    header: "Enabled",
+    accessorKey: "quantity",
+    header: "Quantity",
+    cell: ({ row }) => {
+      const quantity = row.getValue("quantity") as number;
+      const type = row.original.type;
+      const isInput = type === "INPUT";
+      return (
+        <span
+          className={
+            isInput
+              ? "font-medium text-emerald-600"
+              : "font-medium text-red-600"
+          }
+        >
+          {isInput ? "+" : "-"}
+          {quantity}
+        </span>
+      );
+    },
+  },
+  {
+    accessorKey: "createdBy",
+    header: "Created By",
+    cell: ({ row }) => {
+      const createdBy = row.getValue("createdBy") as { name: string };
+      return <span>{createdBy.name}</span>;
+    },
   },
   {
     accessorKey: "actions",
     header: "",
     cell: ({ row }) => {
-      const userId = row.original.id;
-      const userName = row.original.name;
-      return <UserActionsCell userId={userId} userName={userName} />;
+      const movementId = row.original.id;
+      const movementName = row.original.id;
+      return (
+        <MovementActionsCell
+          movementId={movementId}
+          movementName={movementName}
+        />
+      );
     },
   },
 ];
