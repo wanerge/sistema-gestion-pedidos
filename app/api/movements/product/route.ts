@@ -4,16 +4,46 @@ import prisma from "@/lib/prisma";
 export async function POST(request: NextRequest): Promise<NextResponse> {
   const { movement } = await request.json();
   try {
-    const createdMovement = await prisma.inventoryMovement.create({
-      data: {
-        type: movement.type,
-        quantity: movement.quantity,
-        productId: movement.productId,
-        createdById: movement.createdById,
-        updatedById: movement.updatedById,
-      },
+    const result = await prisma.$transaction(async (tx) => {
+      const product = await tx.product.findUnique({
+        where: {
+          id: movement.productId,
+        },
+      });
+
+      if (!product) {
+        throw new Error("Product not found");
+      }
+
+      if (movement.type === "OUTPUT" && product.stock < movement.quantity) {
+        throw new Error("Insufficient stock");
+      }
+
+      const createdMovement = await tx.inventoryMovement.create({
+        data: {
+          type: movement.type,
+          quantity: movement.quantity,
+          productId: movement.productId,
+          createdById: movement.createdById,
+          updatedById: movement.updatedById,
+        },
+      });
+
+      await tx.product.update({
+        where: {
+          id: movement.productId,
+        },
+        data: {
+          stock:
+            movement.type === "INPUT"
+              ? { increment: movement.quantity }
+              : { decrement: movement.quantity },
+          updatedById: movement.updatedById,
+        },
+      });
+      return createdMovement;
     });
-    return NextResponse.json({ movement: createdMovement }, { status: 201 });
+    return NextResponse.json({ movement: result }, { status: 201 });
   } catch (error) {
     console.error("Error creating inventory movement:", error);
     return NextResponse.json(

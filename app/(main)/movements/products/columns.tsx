@@ -129,18 +129,18 @@ export const columns: ColumnDef<InventoryMovement>[] = [
       return <span>{createdBy.name}</span>;
     },
   },
-  {
-    accessorKey: "actions",
-    header: "",
-    cell: ({ row }) => {
-      const movementId = row.original.id;
-      const movementName = row.original.id;
-      return (
-        <MovementActionsCell
-          movementId={movementId}
-          movementName={movementName}
-        />
-      );
-    },
-  },
+  // {
+  //   accessorKey: "actions",
+  //   header: "",
+  //   cell: ({ row }) => {
+  //     const movementId = row.original.id;
+  //     const movementName = row.original.id;
+  //     return (
+  //       <MovementActionsCell
+  //         movementId={movementId}
+  //         movementName={movementName}
+  //       />
+  //     );
+  //   },
+  // },
 ];

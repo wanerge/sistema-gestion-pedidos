@@ -3,7 +3,11 @@ import prisma from "@/lib/prisma";
 
 export async function GET(request: NextRequest): Promise<NextResponse> {
   try {
+    const { searchParams } = request.nextUrl;
+    const productId = searchParams.get("productId");
+
     const movements = await prisma.inventoryMovement.findMany({
+      where: productId ? { productId } : undefined,
       select: {
         id: true,
         type: true,
