@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "postinstall": "prisma generate",
     "build": "next build",
     "start": "next start",
     "lint": "eslint"
@@ -17,7 +18,7 @@
     "@iconify-react/mdi": "^1.0.2",
     "@iconify/css-react": "^1.0.2",
     "@prisma/adapter-pg": "^7.7.0",
-    "@prisma/client": "^7.7.0",
+    "@prisma/client": "^7.8.0",
     "@remixicon/react": "^4.9.0",
     "@tanstack/react-form": "^1.29.1",
     "@tanstack/react-table": "^8.21.3",
@@ -50,7 +51,7 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.2.4",
-    "prisma": "^7.7.0",
+    "prisma": "^7.8.0",
     "tailwindcss": "^4",
     "tsx": "^4.21.0",
     "typescript": "^5"
