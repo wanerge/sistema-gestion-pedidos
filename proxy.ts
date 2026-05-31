@@ -17,7 +17,7 @@ const routeRules: RouteRule[] = [
   { path: "/movements", roles: ["ADMIN", "USER"] },
   { path: "/transactions", roles: ["ADMIN", "USER"] },
   { path: "/users", roles: ["ADMIN"] },
-  { path: "/dashboard", roles: ["ADMIN"] },
+  { path: "/dashboard", roles: ["OPCION"] },
 ];
 
 function redirectToLogin(request: NextRequest) {
