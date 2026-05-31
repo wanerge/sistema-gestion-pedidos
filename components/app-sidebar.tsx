@@ -184,27 +184,7 @@ const data = {
   ],
 };
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const [user, setUser] = React.useState<User>();
-
-  async function getMe() {
-    try {
-      const response = await fetch("/api/me", {
-        method: "GET",
-        headers: { "Content-Type": "application/json" },
-      }).then((res) => {
-        if (!res.ok) {
-          throw new Error("Failed to fetch user data.");
-        }
-        return res;
-      });
-      const userData = await response.json();
-      setUser(userData.user);
-    } catch (error) {}
-  }
-
-  React.useEffect(() => {
-    getMe();
-  }, []);
+  const { user, isLoading, isError } = useUser();
 
   return (
     <Sidebar collapsible="offcanvas" {...props}>

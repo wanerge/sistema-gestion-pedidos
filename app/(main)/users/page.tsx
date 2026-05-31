@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { columns, User } from "./columns";
-import { DataTable } from "./data-table";
+import { DataTable } from "@/components/data-table-general";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 

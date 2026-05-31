@@ -28,6 +28,8 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
+  SelectGroup,
+  SelectLabel,
 } from "@/components/ui/select";
 import { RiArrowLeftLine, RiArrowRightLine } from "@remixicon/react";
 
@@ -163,11 +165,14 @@ export function DataTable<TData, TValue>({
               <SelectValue placeholder="Columna" />
             </SelectTrigger>
             <SelectContent>
-              {searchableColumns.map((id) => (
-                <SelectItem key={id} value={id}>
-                  {getColumnLabel(id)}
-                </SelectItem>
-              ))}
+              <SelectGroup>
+                <SelectLabel>Columnas</SelectLabel>
+                {searchableColumns.map((id) => (
+                  <SelectItem key={id} value={id}>
+                    {getColumnLabel(id)}
+                  </SelectItem>
+                ))}
+              </SelectGroup>
             </SelectContent>
           </Select>
 

@@ -1,3 +1,18 @@
+- Wanerge Almanza Velasquez
+- Miguel Angel Serna Montoya
+- Daniel Duque Rivera
+
+## Credenciales
+
+- Admin: wanerge100@hotmail.com, 123456
+- User: juan@example.com, 123456
+
+## Proposito del proyecto
+
+El propósito de este proyecto es desarrollar una aplicación web fullstack de administración para una tienda de mascotas, enfocada en la gestión de pedidos, utilizando tecnologías como NextJS, React y TailwindCSS, con integración a una base de datos en Supabase. La aplicación busca permitir a los usuarios interiorizar el proceso completo de desarrollo de una plataforma web moderna, implementando autenticación de usuarios, manejo de roles (ADMIN y USER) y operaciones CRUD. En este sistema, los clientes pueden realizar pedidos de productos para mascotas, mientras que el personal administra el inventario, gestiona los pedidos y supervisa las transacciones asociadas al proceso de compra, incluyendo su creación, actualización y seguimiento. Además, se busca fortalecer la comprensión del desarrollo de interfaces funcionales y responsivas, el control de acceso según roles, la visualización de información mediante tablas y gráficas, y la construcción de una experiencia de usuario completa en una aplicación de administración real.
+
+---
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started
