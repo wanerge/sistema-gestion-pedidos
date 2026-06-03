@@ -7,7 +7,7 @@ import {
 
 type RouteRule = { path: string; roles: string[] };
 
-const publicRoutes = new Set(["/login", "/", "/403", "/rate-us"]);
+const publicRoutes = new Set(["/login", "/", "/403", "/reviews"]);
 
 const routeRules: RouteRule[] = [
   { path: "/welcome", roles: ["ADMIN", "USER"] },

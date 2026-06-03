@@ -52,7 +52,7 @@ type RateUsFormProps = Readonly<{
   onSubmit: (data: z.infer<typeof formSchema>) => Promise<Response>;
 }>;
 
-export default function RateUsForm({ onSubmit }: RateUsFormProps) {
+export default function ReviewsForm({ onSubmit }: RateUsFormProps) {
   const [isSubmitting, setIsSubmitting] = React.useState(false);
   const [submitted, setSubmitted] = React.useState(false);
   const [submittedData, setSubmittedData] = React.useState<z.infer<
@@ -73,20 +73,17 @@ export default function RateUsForm({ onSubmit }: RateUsFormProps) {
     onSubmit: async ({ value }) => {
       setIsSubmitting(true);
       try {
-        const result = await fetch(
-          "https://npyuezu3cl.execute-api.us-east-1.amazonaws.com/dev/reviews",
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              rating: value.rating,
-              text: value.text,
-              name: value.name,
-              pet: value.pet,
-              location: value.location,
-            }),
-          },
-        );
+        const result = await fetch("api/reviews", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            rating: value.rating,
+            text: value.text,
+            name: value.name,
+            pet: value.pet,
+            location: value.location,
+          }),
+        });
         if (result.ok) {
           setSubmittedData(value);
           setSubmitted(true);

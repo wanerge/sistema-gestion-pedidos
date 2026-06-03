@@ -93,13 +93,10 @@ export default function Landing() {
 
   async function getRating() {
     try {
-      const response = await fetch(
-        "https://npyuezu3cl.execute-api.us-east-1.amazonaws.com/dev/reviews",
-        {
-          method: "GET",
-          headers: { "Content-Type": "application/json" },
-        },
-      ).then((res) => {
+      const response = await fetch("api/reviews", {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+      }).then((res) => {
         if (!res.ok) {
           throw new Error("Failed to fetch review rating.");
         }
@@ -141,7 +138,7 @@ export default function Landing() {
 
           <nav className="flex items-center gap-6">
             <Link
-              href="/rate-us"
+              href="/reviews"
               className="text-sm font-medium text-slate-600 transition hover:text-amber-600"
             >
               califícanos
